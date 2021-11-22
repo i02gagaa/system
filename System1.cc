@@ -14,6 +14,7 @@ using namespace std;
 
 
 void System::testSetup(){
+    int inputInt;
     Reservation reservation;
     Machine machine;
     Machine machineLowRes;
@@ -29,8 +30,9 @@ void System::testSetup(){
     int nDaysReserved =1;
     testResourcesLow.cores=1;
     testResourcesLow.ram=1;
+    clearScreen("Test Setup");
 
-
+    
 
     machine.setId_("m4");
     machine.setResources_(testResources);
@@ -42,8 +44,13 @@ void System::testSetup(){
     limit.setMaxResources_(testResources);
 
     user.setId_("u2");
-    user.setLimitId_(limit.getId_());
-    user.setUserType_(1);
+    cout<<"Introduzca el tipo de usuario que desea para el test (tipo 0, 1 o 2)\n";
+    cin>>inputInt;
+    user.setUserType_(inputInt);
+    cout<<"Desea que el usuario tenga limites asociados por defecto? (1 o 0)\n";
+    cin>>inputInt;
+    if(inputInt==1){user.setLimitId_(limit.getId_());}
+    
 
     reservation.setId_("r3");
     reservation.setFirstDay_(today());
@@ -258,26 +265,32 @@ bool System::addReservation(const string &userId){
     accResources.cores+=newReservationResources.cores;
     accResources.ram+=newReservationResources.ram;
 
-    //Obtenemos los limites asociados al usuario
-    list <Limit>::iterator l;
-    for(l = limits_.begin();l->getId_()!=currentUser.getLimitId_();l++){
+    //Obtenemos los limites asociados al usuario solo si existen, es decir, su campo de LimitId no esta vacio
+
+    if(currentUser.getLimitId_()!="defaultLId"){
+
+        //Obtenemos los limites asociados al usuario
+        list <Limit>::iterator l;
+        for(l = limits_.begin();(l!=limits_.end())&&(l->getId_()!=currentUser.getLimitId_());l++){ }
+        
         if(l==limits_.end()){
             clearScreen("Creacion de Reservas"); 
             cout<<"Fatal Error:addReservation: El limite "<<currentUser.getLimitId_()<<" del usuario "<<currentUser.getId_()<<" no esta en el sistema\nAbortando ejecucion\n";
             exit(EXIT_FAILURE);
         }
-    }
-    int maxDays= l->getMaxDays_();
-    struct resource maxResources = l->getMaxResources_();
 
-    //Comprobamos que los recursos y dias acumulados no sobrepasen la reserva
-    if((accDays>maxDays)||(accResources.cores>maxResources.cores)||(accResources.ram>maxResources.ram)) {
-        //Se pretenden reservar mas de los posibles
-        clearScreen("Creacion de Reservas"); 
-        cout<<"\n--->Se pretenden reservar mas recursos de los posibles, su periodo maximo de dias es "<<maxDays<<" su cantidad de nucleos maxima es "<<maxResources.cores<<" y su cantidad maxima de RAM es "<<maxResources.ram<<"\nPara cambiar sus limites contacte con el administrador";
-        cout<<"\nActualmente tiene un periodo total de "<<(accDays-daySpan)<<" dias reservados y "<<(accResources.cores-newReservationResources.cores)<<" nucleos con "<<(accResources.ram-newReservationResources.ram)<<"GB de RAM reservados";
-        cout<<"\nCancelando reserva";
-        return false;
+        int maxDays= l->getMaxDays_();
+        struct resource maxResources = l->getMaxResources_();
+
+        //Comprobamos que los recursos y dias acumulados no sobrepasen la reserva
+        if((accDays>maxDays)||(accResources.cores>maxResources.cores)||(accResources.ram>maxResources.ram)) {
+            //Se pretenden reservar mas de los posibles
+            clearScreen("Creacion de Reservas"); 
+            cout<<"\n--->Se pretenden reservar mas recursos de los posibles, su periodo maximo de dias es "<<maxDays<<" su cantidad de nucleos maxima es "<<maxResources.cores<<" y su cantidad maxima de RAM es "<<maxResources.ram<<"\nPara cambiar sus limites contacte con el administrador";
+            cout<<"\nActualmente tiene un periodo total de "<<(accDays-daySpan)<<" dias reservados y "<<(accResources.cores-newReservationResources.cores)<<" nucleos con "<<(accResources.ram-newReservationResources.ram)<<"GB de RAM reservados";
+            cout<<"\nCancelando reserva";
+            return false;
+        }
     }
 
 
@@ -291,8 +304,9 @@ bool System::addReservation(const string &userId){
     //Creamos lista de maquinas validas que puedan satisfacer la reserva y si una maquina es valida la imprimimos por pantalla
     list <Machine> machines;
     list <Machine>::iterator m ;
+    
 
-    clearScreen("Creacion de Reservas");
+    if (!machines_.empty()) {clearScreen("Creacion de Reservas");}
     int count =0; 
 
 
