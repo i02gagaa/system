@@ -12,9 +12,9 @@
 using namespace std;
 
 
-//bool System::addUser(const string &userId){}
-//bool System::deleteUser(const string &userId){}//Debe borrar las reservas a su nombre con deleteReservation(reservationId) antes de borrar el usuario
-//bool System::modifyUser(const string &userId){}
-//bool System::addMachine(const string &userId){}
-//bool System::deleteMachine(const string &userId){}//Debe borrar las reservas a su nombre con deleteReservation(reservationId) antes de borrar el usuario
-//bool System::modifyMachine(const string &userId){}
+bool System::addUser(const string &userId){cout<<"No Implementada\n";return false;}
+bool System::deleteUser(const string &userId){cout<<"No Implementada\n";return false;}//Debe borrar las reservas a su nombre con deleteReservation(reservationId) antes de borrar el usuario
+bool System::modifyUser(const string &userId){cout<<"No Implementada\n";return false;}
+bool System::addMachine(const string &userId){cout<<"No Implementada\n";return false;}
+bool System::deleteMachine(const string &userId){cout<<"No Implementada\n";return false;}//Debe borrar las reservas a su nombre con deleteReservation(reservationId) antes de borrar el usuario
+bool System::modifyMachine(const string &userId){cout<<"No Implementada\n";return false;}

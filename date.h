@@ -3,7 +3,6 @@
 #include <string>
 using namespace std;
 
-
 //Funcion Metes fecha en formato dd/mm/yyyy y devuelve el numero de dias que han pasado desde 01/01/1990
 int dateToInt(string date);
 

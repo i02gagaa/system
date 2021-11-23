@@ -51,7 +51,7 @@ public:
     //Muestra la lista de maquinas con sus recursos totales por pantalla si el usuario tiene los permisos
     void showMachines(const string &userId);
     bool addLimit(const string &userId);
-    bool removeLimit(const string &userId);
+    bool deleteLimit(const string &userId);
     void showLimits(const string &userId);
     
     

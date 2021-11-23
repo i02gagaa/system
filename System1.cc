@@ -44,10 +44,10 @@ void System::testSetup(){
     limit.setMaxResources_(testResources);
 
     user.setId_("u2");
-    cout<<"Introduzca el tipo de usuario que desea para el test (tipo 0, 1 o 2)\n";
+    cout<<"Introduzca el tipo de usuario que desea para el test (tipo 0, 1 o 2): ";
     cin>>inputInt;
     user.setUserType_(inputInt);
-    cout<<"Desea que el usuario tenga limites asociados por defecto? (1 o 0)\n";
+    cout<<"Desea que el usuario tenga limites asociados por defecto? (1 o 0): ";
     cin>>inputInt;
     if(inputInt==1){user.setLimitId_(limit.getId_());}
     
@@ -84,6 +84,7 @@ User System::findUser(const string &userId){
 
 //Muestra los elementos del sistema por terminal, para debugging
 void System::showObjects(){
+    clearScreen("Estado Actual del Sistema");
     
     cout<<"\n---------------------------------------------\n";
     cout<<"->Machines: "<<machines_.size()<<"-{ ";
@@ -306,7 +307,7 @@ bool System::addReservation(const string &userId){
     list <Machine>::iterator m ;
     
 
-    if (!machines_.empty()) {clearScreen("Creacion de Reservas");}
+    clearScreen("Creacion de Reservas");
     int count =0; 
 
 
@@ -328,7 +329,7 @@ bool System::addReservation(const string &userId){
 
         if(isMachineValid) {
             machines.push_back(*m);
-            cout<<"\n["<<count<<"] ->"<<m->getId_()<<" - Recursos libres: {Nucleos: "<<machineIntervalAvailableResources.cores<<", RAM: "<<machineIntervalAvailableResources.ram<<"}";
+            cout<<"\n ["<<count<<"] ->"<<m->getId_()<<" - Recursos libres: {Nucleos: "<<machineIntervalAvailableResources.cores<<", RAM: "<<machineIntervalAvailableResources.ram<<"}";
             count ++;
         }
     }
@@ -336,8 +337,8 @@ bool System::addReservation(const string &userId){
     //Si no hay ninguna maquina que pueda cumplir los requisitos se cancela la reserva
     if(machines.empty()){
         clearScreen("Creacion de Reservas"); 
-        cout<<"\n--->No existe ninguna maquina que pueda cumplir sus requisitos en el espacio de tiempo indicado";
-        cout<<"\nCancelando reserva";
+        cout<<"\n--->No existe ninguna maquina que pueda cumplir sus requisitos en el espacio de tiempo indicado\n";
+        cout<<"Cancelando reserva\n";
         return false;
     }
     
@@ -439,7 +440,7 @@ bool System::modifyReservation(const string &userId){
             cout<<" ["<<count<<"] -{ Id reserva:"<<i->getId_()<<", Maquina:"<<i->getMachineId_()<<", Fecha inicio:"<<intToDate(i->getFirstDay_())<<", Fecha final:"<<intToDate(i->getLastDay_())<<", Nucleos:"<<i->getResources_().cores<<", RAM:"<<i->getResources_().ram<<", User:"<<currentreservationUser.getLogin_()<<"}\n";
         }else{
             //Vista de usuario normal 
-            cout<<" ["<<count<<"] -{ Id reserva:"<<i->getId_()<<", Maquina:"<<i->getMachineId_()<<", Fecha inicio:"<<intToDate(i->getFirstDay_())<<", Fecha final:"<<intToDate(i->getLastDay_())<<", Nucleos:"<<i->getResources_().cores<<", RAM:"<<i->getResources_().ram<<"n";
+            cout<<" ["<<count<<"] -{ Id reserva:"<<i->getId_()<<", Maquina:"<<i->getMachineId_()<<", Fecha inicio:"<<intToDate(i->getFirstDay_())<<", Fecha final:"<<intToDate(i->getLastDay_())<<", Nucleos:"<<i->getResources_().cores<<", RAM:"<<i->getResources_().ram<<"\n";
         }  
         count++;      
     }
@@ -518,7 +519,7 @@ void System::showMachines(const string &userId){
         int count=0;
         for(Machine &m: machines_){
             struct resource machineAvailableResources= m.getResources_();
-            cout<<"["<<count<<"] ->"<<m.getId_()<<" - Recursos : {Nucleos: "<<machineAvailableResources.cores<<", RAM: "<<machineAvailableResources.ram<<"}\n";
+            cout<<" ["<<count<<"] ->"<<m.getId_()<<" - Recursos : {Nucleos: "<<machineAvailableResources.cores<<", RAM: "<<machineAvailableResources.ram<<"}\n";
             count++;
         }
     } else{
@@ -555,7 +556,7 @@ void System::showReservations(const string &userId){
                 cout<<" ["<<count<<"] -{ Id reserva:"<<i->getId_()<<", Maquina:"<<i->getMachineId_()<<", Fecha inicio:"<<intToDate(i->getFirstDay_())<<", Fecha final:"<<intToDate(i->getLastDay_())<<", Nucleos:"<<i->getResources_().cores<<", RAM:"<<i->getResources_().ram<<", User:"<<currentreservationUser.getLogin_()<<"}\n";
             }else{
                 //Vista de usuario normal 
-                cout<<" ["<<count<<"] -{ Id reserva:"<<i->getId_()<<", Maquina:"<<i->getMachineId_()<<", Fecha inicio:"<<intToDate(i->getFirstDay_())<<", Fecha final:"<<intToDate(i->getLastDay_())<<", Nucleos:"<<i->getResources_().cores<<", RAM:"<<i->getResources_().ram<<"n";
+                cout<<" ["<<count<<"] -{ Id reserva:"<<i->getId_()<<", Maquina:"<<i->getMachineId_()<<", Fecha inicio:"<<intToDate(i->getFirstDay_())<<", Fecha final:"<<intToDate(i->getLastDay_())<<", Nucleos:"<<i->getResources_().cores<<", RAM:"<<i->getResources_().ram<<"\n";
             }  
             count++;      
         }
