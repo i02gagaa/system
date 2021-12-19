@@ -19,7 +19,26 @@ System::System(){cout<<"Construye\n";cout<<"No Implementada\n";}
 System::~System(){cout<<"Destruye\n";cout<<"No Implementada\n";}
 
 
-User System::authenticateUser(){cout<<"No Implementada\n";User userNoImplementado; userNoImplementado.setId_("noImplementado"); return userNoImplementado;}
+User System::authenticateUser(){
+  clearScreen("Autenticacion de Usuario");
+  list <User>::iterator i = users_.begin();
+  string log;
+  string pas;
+  do{
+    cout<<"Introduzca el login del usuario\n";
+    cin>>log;
+    cout<<"Introduzca la contrasena del usuario\n";
+    cin >>pas;
+    for (i = users_.begin(); i != users_.end(); r++) {
+      if(i->getLogin_()==log){
+        if(i->getPassword_()==pas){
+          return *i;
+        }
+      }
+    }
+    cout << "Debe introducir el login y la contrasena correctos" << '\n';
+  }while(true);
+}
 
 void System::showUsers(const string &userId){
   clearScreen("Lista de Usuarios");
