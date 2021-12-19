@@ -55,30 +55,20 @@ bool System::addUser(const string &userId){
   newUser.setUserType_(userT);
   clearScreen("Creacion de Usuarios");
 
-//Nombre del usuario
+  //Nombre del usuario
   string name;
   cout<<"\n->Introduzca el nombre del nuevo Usuario:";
   cin >> name;
-  list <User>::iterator i = users_.begin();
-  do{//comprueba que el nombre no este repetido
-    isInputOk = true;
-    while (i!=users_.end()){
-        if((i->getName_())==name){
-          std::cout << "Introduzca un nombre distinto" << '\n';
-          isInputOk=false;
-        }
-    }
-  }while(!isInputOk);
   newUser.setName_(name);
   clearScreen("Creacion de Usuarios");
 
   //login del usuario
   string login;
   cout<<"\n->Introduzca el login del nuevo Usuario:";
-  cin >> login;
   list <User>::iterator f = users_.begin();
-  do{//comprueba que el nombre no este repetido
+  do{//comprueba que el login no este repetido
       isInputOk = true;
+      cin >> login;
       while (f!=users_.end()){
           if((f->getLogin_())==login){
           isInputOk=false;
@@ -91,7 +81,17 @@ bool System::addUser(const string &userId){
   //contrasena del usuario
   string contrasena;
   cout<<"\n->Introduzca la contrasena del nuevo Usuario:";
-  cin >> contrasena;
+  list <User>::iterator i = users_.begin();
+  do{//comprueba que el login no este repetido
+      isInputOk = true;
+      cin >> contrasena;
+      while (i!=users_.end()){
+        if((i->getPassword_())==contrasena){
+          cout << "Error,esa contrasena ya existe" << '\n';
+          isInputOk=false;
+        }
+      }
+  }while(!isInputOk);
   newUser.setPassword_(contrasena);
   clearScreen("Creacion de Usuarios");
 
@@ -252,7 +252,7 @@ bool System::addMachine(const string &userId){
   }
 }
 
-bool System::deleteMachine(const string &machineId){
+bool System::deleteMachine(const string &userId){//el Id es de la maquina a borrar
   if(machines_.empty()){//la lista esta vacia
     cout << "Error, la lista esta vacia" << '\n';
     return false;
@@ -261,9 +261,9 @@ bool System::deleteMachine(const string &machineId){
   list<Reservation>::iterator ir;
   for (it = machines_.begin(); it != machines_.end(); it++) {
 
-    if(it->getId_()==machineId){
+    if(it->getId_()==userId){
       for (ir = reservations_.begin(); ir != reservations_.end(); ir++) {
-        if(ir->getMachineId_()==machineId){
+        if(ir->getMachineId_()==userId){
           if( deleteReservation( ir->getId_() )==false ){//comprobamos si se pueden borrar las reservas y lo hacemos
             cout << "Error,no se ha podido eliminar las reservas de la maquina" << '\n';
             return false;
