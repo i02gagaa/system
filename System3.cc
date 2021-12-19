@@ -22,16 +22,21 @@ bool System::addUser(const string &userId){
   User newUser;
   bool isInputOk;
 
-  //ID
-  //Vamos a establecer el id del usuario para esto vemos si la lista de usuarios esta vacia, si es asi, su id sera u1, si no, tomaremos el identificador de la ultima reserva de la lista y le sumaremos una unidad a su parte de digitos
+  //Vamos a establecer el id del usuario para esto vemos si la lista de usuarios esta vacia, si es asi, su id sera u1, si no, lo escribimos nosotros
   string newusId="u";
   int newusIdNumber=1;
-  if(users_.empty()){newusId+=to_string(newusIdNumber);
-  }else{
-      string previousId=(users_.back().getId_());
-      newusIdNumber=stoi(previousId.substr(1));
-      newusIdNumber++;
+  if(users_.empty()){newusId+=to_string(newusIdNumber);}
+  else{
+      cout << "Introduzca el numero del identificador:" << '\n';
+      cin>>newusIdNumber;
       newusId+=to_string(newusIdNumber);
+  }
+  list<User>::iterator r;
+  for (r = users_.begin(); r != users_.end(); r++) {
+    if(r->getId_()==newusId){
+      cout << "Error,ese usuario ya existe" << '\n';
+      exit(EXIT_FAILURE);
+    }
   }
   newUser.setId_(newusId);
   clearScreen("Creacion de Usuarios");
@@ -59,7 +64,8 @@ bool System::addUser(const string &userId){
     isInputOk = true;
     while (i!=users_.end()){
         if((i->getName_())==name){
-        isInputOk=false;
+          std::cout << "Introduzca un nombre distinto" << '\n';
+          isInputOk=false;
         }
     }
   }while(!isInputOk);
@@ -153,9 +159,10 @@ bool System::modifyUser(const string &userId){
     exit(EXIT_FAILURE);
   }
   showUsers(userId);
-  cout << "Escriba el ID del usuario que desea modificar" << '\n';
+  cout << "Escriba el ID del usuario que desea modificar:" << '\n';
   string userModID;
   cin >> userModID;
+  currentUser = findUser(userModID);//comprobamos si el ID es correcto
 
   int option;
   cout << "¿Se desea modificar o borrar al usuario?" << '\n';
@@ -178,7 +185,7 @@ bool System::modifyUser(const string &userId){
     if(deleteUser(userModID)==false){
       return false;
     }
-    
+
     return true;
   }
 
@@ -188,6 +195,139 @@ bool System::modifyUser(const string &userId){
   }
 }
 
-bool System::addMachine(const string &userId){cout<<"No Implementada\n";return false;}
-bool System::deleteMachine(const string &userId){cout<<"No Implementada\n";return false;}//Debe borrar las reservas a su nombre con deleteReservation(reservationId) antes de borrar el usuario
-bool System::modifyMachine(const string &userId){cout<<"No Implementada\n";return false;}
+bool System::addMachine(const string &userId){
+  clearScreen("Creacion de Maquinas");
+  User currentUser = findUser(userId);
+  if (currentUser.getUserType_()!=1) {
+    std::cout << "Error,solo los usuarios de tipo 1 pueden crear nuevos maquinas" << '\n';
+    exit(EXIT_FAILURE);
+  }
+  Machine newMachine;
+
+  //ID de la maquina
+  string newMId="m";
+  int newMIdNumber=1;
+  if(machines_.empty()){newMId+=to_string(newMIdNumber);}
+  else{
+      cout << "Introduzca el numero del identificador:" << '\n';
+      cin>>newMIdNumber;
+      newMId+=to_string(newMIdNumber);
+  }
+  list<Machine>::iterator m;
+  for (m = machines_.begin(); m != machines_.end(); m++) {
+    if(m->getId_()==newMId){
+      cout << "Error,esa maquina ya existe" << '\n';
+      exit(EXIT_FAILURE);
+    }
+  }
+  newMachine.setId_(newMId);
+  clearScreen("Creacion de Maquinas");
+
+  struct resource aux;
+  int nu;
+  int ra;
+  cout << "Introduzca el numero de nucleos de su maquina:" << '\n';
+  cin >>nu;
+  aux.cores=nu;
+  cout << "Introduzca la cantidad de ram de su maquina:" << '\n';
+  cin >>ra;
+  aux.ram=ra;
+  newMachine.setResources_(aux);
+  clearScreen("Creacion de Maquinas");
+
+  //Preguntamos por la confirmacion del usuario
+  int inputInt;
+  cout<<"\n--->Datos de la nueva maquina:";
+  cout<<"\nID: "<<newMachine.getId_()<<"\nNucleos: "<<newMachine.getResources_().cores<<", RAM: "<<newMachine.getResources_().ram;
+  cout<<"\nEsta satisfecho con la reserva?\n->Introduzca 1 para confirmar, 0 para cancelar:";
+  cin>>inputInt;
+  if (inputInt==1)
+  {
+      machines_.push_back(newMachine);
+      cout<<"\nMaquina Confirmada";
+      return true;
+  } else{
+      cout<<"\nMaquina Cancelada";
+      return false;
+  }
+}
+
+bool System::deleteMachine(const string &machineId){
+  if(machines_.empty()){//la lista esta vacia
+    cout << "Error, la lista esta vacia" << '\n';
+    return false;
+  }
+  list<Machine>::iterator it;
+  list<Reservation>::iterator ir;
+  for (it = machines_.begin(); it != machines_.end(); it++) {
+
+    if(it->getId_()==machineId){
+      for (ir = reservations_.begin(); ir != reservations_.end(); ir++) {
+        if(ir->getMachineId_()==machineId){
+          if( deleteReservation( ir->getId_() )==false ){//comprobamos si se pueden borrar las reservas y lo hacemos
+            cout << "Error,no se ha podido eliminar las reservas de la maquina" << '\n';
+            return false;
+          }
+        }
+      }
+      //si la maquina no tuviera reservas se pasaria directamente a eliminar sus datos
+      machines_.erase(it);//borramos la maquina
+      return true;
+    }
+  }
+  return false;//si no encuentra la maquina a borrar,devuelve false
+}//Debe borrar las reservas a su nombre con deleteReservation(reservationId) antes de borrar el usuario
+
+bool System::modifyMachine(const string &userId){
+  clearScreen("Modificacion de Maquina");
+  User currentUser = findUser(userId);
+  if (currentUser.getUserType_()!=1) {
+    std::cout << "Error,solo los usuarios de tipo 1 pueden modificar maquinas" << '\n';
+    exit(EXIT_FAILURE);
+  }
+  showMachines(userId);
+  cout << "Escriba el ID de la maquina que desea modificar:" << '\n';
+  string MachineModID;
+  cin >> MachineModID;
+  int a=0;
+  list<Machine>::iterator ma;
+  for (ma = machines_.begin(); ma != machines_.end(); ma++) {
+    if(ma->getId_()==MachineModID){
+      a++;
+    }
+  }
+  if(a==0){
+    cout<<"Fatal Error: La maquina "<<MachineModID<<" no esta en el sistema\nAbortando ejecucion\n";
+    exit(EXIT_FAILURE);
+  }//comprobamos si existe la maquina
+
+  int option;
+  cout << "¿Se desea modificar o borrar la maquina?" << '\n';
+  cout << "1-Modificar la maquina" << '\n';
+  cout << "2-Borrar la maquina" << '\n';
+  cin >> option;
+  if(option==1){//borramos y creamos usuario para modificarlo con el mismo id
+
+    if(deleteMachine(MachineModID)==false){
+      return false;
+    }
+    if(addMachine(userId)==false){
+      return false;
+    }
+
+    return true;
+  }
+
+  else if(option==2){
+    if(deleteMachine(userModID)==false){
+      return false;
+    }
+
+    return true;
+  }
+
+  else{
+    cout << "Error,Debe escoger entre la opcion 1 o la opcion 2" << '\n';
+    return false;
+  }
+}
