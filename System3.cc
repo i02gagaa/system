@@ -112,7 +112,7 @@ bool System::addUser(const string &userId){
   int inputInt;
   cout<<"\n--->Datos del nuevo usuario:";
   cout<<"\nID: "<<newUser.getId_()<<"\nTipo de Usuario: "<<newUser.getUserType_()<<"\nNombre del Usuario: "<<newUser.getName_()<<"\nLogin del Usuario: "<<newUser.getLogin_()<<"\nContrasena del Usuario: "<<newUser.getPassword_()<<"\nID de limite del Usuario: "<<newUser.getLimitId_();
-  cout<<"\nEsta satisfecho con la reserva?\n->Introduzca 1 para confirmar, 0 para cancelar:";
+  cout<<"\nEsta satisfecho con el usuario?\n->Introduzca 1 para confirmar, 0 para cancelar:";
   cin>>inputInt;
   if (inputInt==1)
   {
@@ -239,7 +239,7 @@ bool System::addMachine(const string &userId){
   int inputInt;
   cout<<"\n--->Datos de la nueva maquina:";
   cout<<"\nID: "<<newMachine.getId_()<<"\nNucleos: "<<newMachine.getResources_().cores<<", RAM: "<<newMachine.getResources_().ram;
-  cout<<"\nEsta satisfecho con la reserva?\n->Introduzca 1 para confirmar, 0 para cancelar:";
+  cout<<"\nEsta satisfecho con la maquina?\n->Introduzca 1 para confirmar, 0 para cancelar:";
   cin>>inputInt;
   if (inputInt==1)
   {
