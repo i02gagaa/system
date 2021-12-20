@@ -16,8 +16,8 @@ bool System::addUser(const string &userId){
   clearScreen("Creacion de Usuarios");
   User currentUser = findUser(userId);
   if (currentUser.getUserType_()!=2) {
-    std::cout << "Error,solo los usuarios de tipo 2 pueden crear nuevos usuarios" << '\n';
-    exit(EXIT_FAILURE);
+    cout << "Error,solo los usuarios de tipo 2 pueden crear nuevos usuarios" << '\n';
+    return false;
   }
   User newUser;
   bool isInputOk;
@@ -133,7 +133,6 @@ bool System::deleteUser(const string &userId){
   list<User>::iterator it;
   list<Reservation>::iterator ir;
   for (it = users_.begin(); it != users_.end(); it++) {
-
     if(it->getId_()==userId){
       for (ir = reservations_.begin(); ir != reservations_.end(); ir++) {
         if(ir->getUserId_()==userId){
@@ -199,7 +198,7 @@ bool System::addMachine(const string &userId){
   clearScreen("Creacion de Maquinas");
   User currentUser = findUser(userId);
   if (currentUser.getUserType_()!=1) {
-    std::cout << "Error,solo los usuarios de tipo 1 pueden crear nuevos maquinas" << '\n';
+    cout << "Error,solo los usuarios de tipo 1 pueden crear nuevos maquinas" << '\n';
     exit(EXIT_FAILURE);
   }
   Machine newMachine;
