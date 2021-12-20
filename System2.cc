@@ -259,27 +259,60 @@ bool System::addLimit(const string &userId){//ID del usuario al que le vamos a i
   }
   newLimit.setId_(Idlim);
   int maxD;
-  //acabar........
-
+  cout << "Introduzca el maximo de dias del limite" << '\n';
+  cin >> maxD;
+  newLimit.setMaxDays_(maxD);
+  struct resource auxLi;
+  cout << "Introduzca el maximo numero de nucleos" << '\n';
+  cin >> auxLi.cores;
+  cout << "Introduzca el maximo numero de nucleos" << '\n';
+  cin >> auxLi.ram;
+  newLimit.setMaxResources_(auxLi);
+  //Preguntamos por la confirmacion del usuario
+  int inputInt;
+  cout<<"\n--->Datos del nuevo limite:";
+  cout<<"\nID: "<<newLimit.getId_()<<"\nMaximos Dias: "<<newLimit.getMaxDays_()<<"\nMaximos Nucleos: "<<newLimit.getMaxResources_().cores<<", Maxima RAM: "<<newLimit.getMaxResources_().ram;
+  cout<<"\nEsta satisfecho con el limite?\n->Introduzca 1 para confirmar, 0 para cancelar:";
+  cin>>inputInt;
+  if (inputInt==1)
+  {
+      machines_.push_back(newMachine);
+      cout<<"\nLimte Confirmado";
+      return true;
+  } else{
+      cout<<"\nLimite Cancelado";
+      return false;
+  }
 }
 
 void System::showLimits(const string &userId) {
-  clearScreen("Creacion de Limites");
+  clearScreen("Mostrar Limites");
   User currentUser = findUser(userId);
   list<Limit>::iterator it;
   for (it = limits_.begin(); it != limits_.end(); it++) {
-    cout << "ID del limite: " << users_.getId_() << '\n';
-    cout << "Maximos dias posibles: " << users_.getMaxDays_() << '\n';
-    cout << "Maximo numero de nucleos: " << users_.getMaxResources_().cores << '\n';
-    cout << "Maxima cantidad de RAM: " << users_.getMaxResources_().ram << '\n';
+    cout << "ID del limite: " << limits_.getId_() << '\n';
+    cout << "Maximos dias posibles: " << limits_.getMaxDays_() << '\n';
+    cout << "Maximo numero de nucleos: " << limits_.getMaxResources_().cores << '\n';
+    cout << "Maxima cantidad de RAM: " << limits_.getMaxResources_().ram << '\n';
   }
 }
 
 bool System::deleteLimit(const string &userId){
-  clearScreen("Creacion de Limites");
+  clearScreen("Eliminacion de Limites");
   User currentUser = findUser(userId);
   showLimits(userId);
+  string limitIdprov;
+  int Dmax;
   cout << "Debe escoger el limite que desea borrar:" << '\n';
-  //unir l+numero,acabar...........
-
+  cin >> limitIdprov;
+  cout << "Especifique ademas del identificador el maximo de dias" << '\n';
+  cin >> Dmax;
+  list<Limit>::iterator it;
+  for (it = limits_.begin(); it != limits_.end(); it++) {
+    if( (it->getId_()==limitIdprov)  &&  (it->getMaxDays_()==Dmax) ){
+      cout << "Limite eliminado exitosamente" << '\n';
+      return true;
+    }
+  }
+  return false;//si no encuentra el limite tras hacer el bucle es que no existe
  }//Debe mostrar por pantalla la lista de limites (Id, rescursos maximos y dias maximos), solicitar al usuario que elija uno y borrarlo de limits_
