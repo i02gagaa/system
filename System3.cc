@@ -43,12 +43,12 @@ bool System::addUser(const string &userId){
 
   int userT;
 //Tipo de usuario
-  cout<<"\n->Introduzca el tipo de nuevo usuario";
+  cout<<"\n->Introduzca el tipo de nuevo usuario:";
   do{
       isInputOk = true;
       cin>>userT;
       if( (userT<0) || (userT>2) ){
-          cout<<"\nTipo de usuario incorrecto, vuelva a introducirlo: ";
+          cout<<"\nTipo de usuario incorrecto, vuelva a introducirlo:";
           isInputOk=false;
         }
   }while(!isInputOk);
@@ -65,11 +65,11 @@ bool System::addUser(const string &userId){
   //login del usuario
   string login;
   cout<<"\n->Introduzca el login del nuevo Usuario:";
-  list <User>::iterator f = users_.begin();
+  list <User>::iterator f;
   do{//comprueba que el login no este repetido
       isInputOk = true;
       cin >> login;
-      while (f!=users_.end()){
+      for (f = users_.begin(); f != users_.end(); f++) {
           if((f->getLogin_())==login){
           isInputOk=false;
           }
@@ -81,11 +81,11 @@ bool System::addUser(const string &userId){
   //contrasena del usuario
   string contrasena;
   cout<<"\n->Introduzca la contrasena del nuevo Usuario:";
-  list <User>::iterator i = users_.begin();
+  list <User>::iterator i;
   do{//comprueba que el login no este repetido
       isInputOk = true;
       cin >> contrasena;
-      while (i!=users_.end()){
+      for (i = users_.begin(); i != users_.end(); i++) {
         if((i->getPassword_())==contrasena){
           cout << "Error,esa contrasena ya existe" << '\n';
           isInputOk=false;
@@ -101,11 +101,11 @@ bool System::addUser(const string &userId){
   if(users_.empty()){newLId+=to_string(newLIdNumber);
   }else{
       string previoLId=(users_.back().getId_());
-      newLIdNumber=stoi(previousId.substr(1));
+      newLIdNumber=stoi(previoLId.substr(1));
       newLIdNumber++;
       newLId+=to_string(newusIdNumber);
   }
-  newUser.limitId_(newLId);
+  newUser.setLimitId_(newLId);
   clearScreen("Creacion de Usuarios");
 
   //Preguntamos por la confirmacion del usuario
@@ -319,7 +319,7 @@ bool System::modifyMachine(const string &userId){
   }
 
   else if(option==2){
-    if(deleteMachine(userModID)==false){
+    if(deleteMachine(MachineModID)==false){
       return false;
     }
 
