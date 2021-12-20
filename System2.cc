@@ -19,7 +19,7 @@ System::System(){
   ifstream file("reservations.csv");
   if(file.is_open()==false){
     reservations_.clear();
-    cout << "No existe el archivo reservations.csv" << '\n'
+    cout << "No existe el archivo reservations.csv" << '\n';
   }
   else{
   reservations_.clear();//borra la lista
@@ -50,12 +50,12 @@ System::System(){
   ifstream file2("limits.csv");
   if(file2.is_open()==false){
     limits_.clear();
-    cout << "No existe el archivo limits.csv" << '\n'
+    cout << "No existe el archivo limits.csv" << '\n';
   }
   else{
   limits_.clear();//borra la lista
   struct resource limi;
-  string Lid,daymax,Lcor,LraM,;
+  string Lid,daymax,Lcor,LraM;
     while (getline(file2, Lid,',')) {//lee hasta que encuentra una coma
       getline(file2, daymax,',');
       getline(file2, Lcor,',');
@@ -75,7 +75,7 @@ System::System(){
   ifstream file3("machines.csv");
   if(file3.is_open()==false){
     machines_.clear();
-    cout << "No existe el archivo machines.csv" << '\n'
+    cout << "No existe el archivo machines.csv" << '\n';
   }
   else{
   machines_.clear();//borra la lista
@@ -98,7 +98,7 @@ System::System(){
   ifstream file4("users.csv");
   if(file4.is_open()==false){
     users_.clear();
-    cout << "No existe el archivo users.csv" << '\n'
+    cout << "No existe el archivo users.csv" << '\n';
     cout << "Se crea un administrador de tipo 2 con login y contrasena default" << '\n';
     User adm2;
     adm2.setId_("u1");
@@ -212,7 +212,7 @@ User System::authenticateUser(){
     cin>>log;
     cout<<"Introduzca la contrasena del usuario\n";
     cin >>pas;
-    for (i = users_.begin(); i != users_.end(); r++) {
+    for (i = users_.begin(); i != users_.end(); i++) {
       if(i->getLogin_()==log){
         if(i->getPassword_()==pas){
           return *i;
@@ -232,12 +232,13 @@ void System::showUsers(const string &userId){
   }
   list<User>::iterator it;
   for (it = users_.begin(); it != users_.end(); it++) {
-    cout << "ID del usuario: " << users_.getId_() << '\n';
-    cout << "Tipo de Usuario: " << users_.getUserType_() << '\n';
-    cout << "Nombre del Usuario: " << users_.getName_() << '\n';
-    cout << "Login del Usuario: " << users_.getLogin_() << '\n';
-    cout << "Contrasena del Usuario: " << users_.getPassword_() << '\n';
-    cout << "ID del limite del Usuario: " << users_.getLimitId_() << '\n';
+    cout << "ID del usuario: " << it->getId_() << '\n';
+    cout << "Tipo de Usuario: " << it->getUserType_() << '\n';
+    cout << "Nombre del Usuario: " << it->getName_() << '\n';
+    cout << "Login del Usuario: " << it->getLogin_() << '\n';
+    cout << "Contrasena del Usuario: " << it->getPassword_() << '\n';
+    cout << "ID del limite del Usuario: " << it->getLimitId_() << '\n';
+    cout << "------------------------" << '\n';
   }
 
 }//Debe mostrar por pantalla la lista de usuarios con login, tipo de usuario, password, id, limitId y nombre
@@ -263,9 +264,9 @@ bool System::addLimit(const string &userId){//ID del usuario al que le vamos a i
   cin >> maxD;
   newLimit.setMaxDays_(maxD);
   struct resource auxLi;
-  cout << "Introduzca el maximo numero de nucleos" << '\n';
+  cout << "Introduzca el maximo numero de nucleos:" << '\n';
   cin >> auxLi.cores;
-  cout << "Introduzca el maximo numero de nucleos" << '\n';
+  cout << "Introduzca la cantidad maxima de RAM:" << '\n';
   cin >> auxLi.ram;
   newLimit.setMaxResources_(auxLi);
   //Preguntamos por la confirmacion del usuario
@@ -276,7 +277,7 @@ bool System::addLimit(const string &userId){//ID del usuario al que le vamos a i
   cin>>inputInt;
   if (inputInt==1)
   {
-      machines_.push_back(newMachine);
+      limits_.push_back(newLimit);
       cout<<"\nLimte Confirmado";
       return true;
   } else{
@@ -290,10 +291,11 @@ void System::showLimits(const string &userId) {
   User currentUser = findUser(userId);
   list<Limit>::iterator it;
   for (it = limits_.begin(); it != limits_.end(); it++) {
-    cout << "ID del limite: " << limits_.getId_() << '\n';
-    cout << "Maximos dias posibles: " << limits_.getMaxDays_() << '\n';
-    cout << "Maximo numero de nucleos: " << limits_.getMaxResources_().cores << '\n';
-    cout << "Maxima cantidad de RAM: " << limits_.getMaxResources_().ram << '\n';
+    cout << "ID del limite: " << it->getId_() << '\n';
+    cout << "Maximos dias posibles: " << it->getMaxDays_() << '\n';
+    cout << "Maximo numero de nucleos: " << it->getMaxResources_().cores << '\n';
+    cout << "Maxima cantidad de RAM: " << it->getMaxResources_().ram << '\n';
+    cout << "------------------------" << '\n';
   }
 }
 
