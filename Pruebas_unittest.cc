@@ -33,5 +33,5 @@ TEST(System, addUser) {
 TEST(System, deleteUser) {
   System system;
   EXPECT_TRUE(system.deleteUser("u3"));
-  EXPECT_FALSE(system.deleteUser("u4"));
+  EXPECT_FALSE(system.deleteUser("u7"));
 }
